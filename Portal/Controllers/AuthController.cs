@@ -43,7 +43,7 @@ namespace Portal.Controllers
             }
 
             var jwt = await identity.GenerateJwt(jwtFactory, credentials.UserName, jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
-            return new OkObjectResult(jwt);
+            return new OkObjectResult(new { token = jwt, userName = credentials.UserName });
         }
 
         [HttpGet]
