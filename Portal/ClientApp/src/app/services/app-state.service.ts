@@ -20,6 +20,11 @@ const AUTH_INFO = 'auth_info';
 @Injectable()
 export class AppStateService {
   private _authInfo = new BehaviorSubject<IAuthInfo>(null);
+  private _pendingRequests = new BehaviorSubject<number>(0);
+
+  public get busy$(): Observable<boolean> {
+      return this._pendingRequests.pipe(map(x => x > 0));
+  }
 
   get isAuthenticated$(): Observable<boolean> {
     return this._authInfo.pipe(map(info => !!info));
@@ -58,6 +63,13 @@ export class AppStateService {
     if (this.isAuthenticated) {
       this.clearAuthToken();
     }
+  }
+
+  public incrementRequests() {
+    this._pendingRequests.next(this._pendingRequests.value + 1);
+  }
+  public decrementRequests() {
+    this._pendingRequests.next(this._pendingRequests.value - 1);
   }
 
   private clearAuthToken() {

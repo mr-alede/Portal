@@ -7,6 +7,10 @@
     </div>
     <div class='col-sm-10 body-content'>
       <router-outlet></router-outlet>
+
+      <app-spinner [isRunning]="busy$ | async"></app-spinner>
     </div>
   </div>
+
+  <div toastContainer></div>
 </div>

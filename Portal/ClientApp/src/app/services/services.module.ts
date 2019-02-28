@@ -1,15 +1,18 @@
 import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ApiInterceptor } from './interceptors/api.interceptor';
+import { ApiNotificationsInterceptor } from './interceptors/api-notifications.interceptor';
 import { AppStateService } from './app-state.service';
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule
+    CommonModule,
+    ToastrModule
   ]
 })
 export class ServicesModule {
@@ -25,6 +28,11 @@ export class ServicesModule {
         {
           provide: HTTP_INTERCEPTORS,
           useClass: ApiInterceptor,
+          multi: true,
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ApiNotificationsInterceptor,
           multi: true,
         },
 

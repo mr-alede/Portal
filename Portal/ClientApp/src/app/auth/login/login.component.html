@@ -25,7 +25,6 @@
 
       <div class="form-group">
         <button type="submit" class="btn btn-sm btn-primary" [disabled]="f.invalid || isRequesting">Login</button>
-        <app-spinner [isRunning]="isRequesting"></app-spinner>
       </div>
 
       <div *ngIf="errors" class="alert alert-danger" role="alert">

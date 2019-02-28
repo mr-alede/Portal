@@ -109,7 +109,7 @@ namespace Portal.Controllers
             var jwt = await identity.GenerateJwt(jwtFactory, user.UserName, jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
             return Content(
                         "<script type=\"text/javascript\">" +
-                        "window.opener.externalProviderLogin(" + JsonConvert.SerializeObject(new { token = jwt, userName = user.UserName }) + ");" +
+                        "window.opener.externalProviderLogin(" + JsonConvert.SerializeObject(new { token = jwt, userName = user.Email }) + ");" +
                         "window.close();" +
                         "</script>",
                         "text/html"

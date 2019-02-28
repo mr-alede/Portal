@@ -1,17 +1,23 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AppStateService, IAuthInfo } from './services/app-state.service';
+import { AppStateService, IAuthInfo } from './services';
+import { Observable } from 'rxjs';
+import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'EtaCom';
+export class AppComponent implements OnInit {
+  @ViewChild(ToastContainerDirective) toastContainer: ToastContainerDirective;
 
-  constructor(private router: Router, private appStateService: AppStateService, private zone: NgZone) {
+  public busy$: Observable<boolean>;
+
+  constructor(
+    private router: Router, private appStateService: AppStateService,
+    private zone: NgZone, private toastrService: ToastrService) {
     if (!(<any>window).externalProviderLogin) {
       var self = this;
       (<any>window).externalProviderLogin = function (auth: IAuthInfo) {
@@ -21,5 +27,11 @@ export class AppComponent {
         });
       }
     }
+  }
+
+  ngOnInit(): void {
+    this.toastrService.overlayContainer = this.toastContainer;
+
+    this.busy$ = this.appStateService.busy$;
   }
 }

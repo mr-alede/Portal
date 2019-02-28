@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   brandNew: boolean;
   errors: string;
-  isRequesting: boolean;
   submitted: boolean = false;
   credentials: ICredentials = { userName: '', password: '' };
 
@@ -39,11 +38,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login({ value, valid }: { value: ICredentials, valid: boolean }) {
     this.submitted = true;
-    this.isRequesting = true;
     this.errors = '';
     if (valid) {
       this.authService.login(value)
-        .pipe(finalize(() => this.isRequesting = false))
         .subscribe(
           result => {
             if (result) {

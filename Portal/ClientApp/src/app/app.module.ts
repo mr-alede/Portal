@@ -1,6 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+ 
+import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +15,7 @@ import { HeaderComponent } from './header/header.component';
 
 import { AuthModule } from './auth/auth.module';
 import { ServicesModule } from './services/services.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -20,10 +24,19 @@ import { ServicesModule } from './services/services.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
 
+    ToastrModule.forRoot({
+      timeOut: 8000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }), 
+    ToastContainerModule,
+
     AuthModule,
+    SharedModule,
     ServicesModule.forRoot()
   ],
   providers: [],

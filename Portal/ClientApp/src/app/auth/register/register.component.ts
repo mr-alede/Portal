@@ -22,12 +22,10 @@ export class RegisterComponent implements OnInit {
 
   registerUser({ value, valid }: { value: IUserRegistrationModel, valid: boolean }) {
     this.submitted = true;
-    this.isRequesting = true;
     this.errors = '';
 
     if (valid) {
       this.accountsService.register(value)
-        .pipe(finalize(() => this.isRequesting = false))
         .subscribe(result => {
           console.log('result', result)
           this.router.navigate(['/login'], { queryParams: { brandNew: true, email: value.email } });
