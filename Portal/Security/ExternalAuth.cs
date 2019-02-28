@@ -67,6 +67,17 @@ namespace Portal.Security
                         options.ClientSecret = cfg.GitHub.AppSecret;
                     });
             }
+
+            if (cfg.Microsoft != null && cfg.Microsoft.Enabled)
+            {
+                authBuilder
+                    .AddMicrosoftAccount(options =>
+                    {
+                        options.ClientId = cfg.Microsoft.AppKey;
+                        options.ClientSecret = cfg.Microsoft.AppSecret;
+                    });
+            }
+
         }
     }
 }

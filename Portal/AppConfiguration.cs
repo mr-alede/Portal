@@ -8,6 +8,7 @@
 
             public ExternalAuthProvider Twitter { get; set; }
             public ExternalAuthProvider GitHub { get; set; }
+            public ExternalAuthProvider Microsoft { get; set; }
 
             /// <summary>
             /// Gets or sets Facebook auth properties
