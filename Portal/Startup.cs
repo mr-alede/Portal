@@ -31,8 +31,8 @@ namespace Portal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string secretKey = Configuration.GetValue<string>("SecretKey");
-            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            var authCfg = Configuration.GetSection("Authentication").Get<AppConfiguration.Authentication>();
+            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authCfg.SecretKey));
 
             services.AddDbContext<PortalDbContext>(options =>
                          options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -42,8 +42,6 @@ namespace Portal
                     .AddDefaultTokenProviders();
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
-
-            //services.Configure<FacebookAuthSettings>(Configuration.GetSection(nameof(FacebookAuthSettings)));
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -86,12 +84,7 @@ namespace Portal
                 configureOptions.TokenValidationParameters = tokenValidationParameters;
                 configureOptions.SaveToken = true;
             })
-            .AddGoogle("Google", options =>
-            {
-                options.CallbackPath = new PathString("/google-callback");
-                options.ClientId = "YourClientIdFromGoogle";
-                options.ClientSecret = "YourClientSecretFromGoogle";
-            });
+            .ConfigureExternalAuth(authCfg);
 
             // api user claim policy
             services.AddAuthorization(options =>

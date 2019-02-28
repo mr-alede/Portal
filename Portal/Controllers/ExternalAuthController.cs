@@ -10,6 +10,7 @@ using Portal.Helpers;
 using Portal.Model.Identity;
 using Portal.Security;
 using Portal.ViewModels.ExternalAuth;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -51,31 +52,58 @@ namespace Portal.Controllers
         public async Task<IActionResult> LoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (remoteError != null)
-            {
                 return BadRequest($"Error from external provider: {remoteError}");
-            }
+
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
                 return BadRequest();
 
-            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
-            if (signInResult.Succeeded)
+            var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (user != null)
             {
-                var user = await userManager.GetUserAsync(HttpContext.User);
-                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                return await TokenResult(user);
+            }
 
-                var identity = jwtFactory.GenerateClaimsIdentity(user.UserName, user.Id);
-                var jwt = await identity.GenerateJwt(jwtFactory, user.UserName, jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
-                return new OkObjectResult(new { token = jwt, userName = user.UserName });
-            }
-            else
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            // Lookup if there's an username with this e-mail address in the Db
+            user = await userManager.FindByEmailAsync(email);
+            if (user != null)
             {
-                // If the user does not have an account, then ask the user to create an account.
-                //ViewData["ReturnUrl"] = returnUrl;
-                //ViewData["LoginProvider"] = info.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel
-                { Email = info.Principal.FindFirstValue(ClaimTypes.Email) });
+                return await TokenResult(user);
             }
+
+            // Create a unique username using the 'nameidentifier' claim
+            var idKey = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+            var username = $"{info.LoginProvider}-{info.Principal.FindFirst(idKey).Value}";
+
+            user = new PortalUser
+            {
+                UserName = username,
+                Email = email
+            };
+
+            await userManager.CreateAsync(user);
+
+            // Remove Lockout and E-Mail confirmation
+            user.EmailConfirmed = true;
+            user.LockoutEnabled = false;
+
+            // Register this external provider to the user
+            await userManager.AddLoginAsync(user, info);
+
+            // Persist everything into the Db
+            await appDbContext.SaveChangesAsync();
+            return await TokenResult(user);
+
+
+            //else
+            //{
+            //    // If the user does not have an account, then ask the user to create an account.
+            //    ViewData["ReturnUrl"] = returnUrl;
+            //    ViewData["LoginProvider"] = info.LoginProvider;
+            //    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel
+            //    { Email = info.Principal.FindFirstValue(ClaimTypes.Email) });
+            //}
         }
 
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
@@ -86,9 +114,20 @@ namespace Portal.Controllers
             await userManager.CreateAsync(user);
             await userManager.AddLoginAsync(user, info);
 
+            return await TokenResult(user);
+        }
+
+        private async Task<IActionResult> TokenResult(PortalUser user)
+        {
             var identity = jwtFactory.GenerateClaimsIdentity(user.UserName, user.Id);
             var jwt = await identity.GenerateJwt(jwtFactory, user.UserName, jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
-            return new OkObjectResult(new { token = jwt, userName = user.UserName });
+            return Content(
+                        "<script type=\"text/javascript\">" +
+                        "window.opener.externalProviderLogin(" + JsonConvert.SerializeObject(new { token = jwt, userName = user.UserName }) + ");" +
+                        "window.close();" +
+                        "</script>",
+                        "text/html"
+                );
         }
     }
 }
