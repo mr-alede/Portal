@@ -29,16 +29,16 @@
     </form>
 
     <div class="social">
-      <button class="btn btn-sm btn-default google" type="submit" (click)="callExternalLogin('Google')">
+      <button class="btn btn-sm btn-default google" (click)="callExternalLogin('Google')">
         <i class="fa fa-google" aria-hidden="true"></i> Google
       </button>
-      <button class="btn btn-sm btn-default facebook" type="submit" (click)="callExternalLogin('Facebook')">
+      <button class="btn btn-sm btn-default facebook" (click)="callExternalLogin('Facebook')">
         <i class="fa fa-facebook" aria-hidden="true"></i> Facebook
       </button>
-      <button class="btn btn-sm btn-default twitter" type="submit" (click)="callExternalLogin('Twitter')">
+      <button class="btn btn-sm btn-default twitter" (click)="callExternalLogin('Twitter')">
         <i class="fa fa-twitter" aria-hidden="true"></i> Twitter
       </button>
-      <button class="btn btn-sm btn-default git">
+      <button class="btn btn-sm btn-default git" (click)="callExternalLogin('GitHub')">
         <i class="fab fa-github pr-1"></i> Github
       </button>
     </div>

@@ -37,15 +37,15 @@ namespace Portal.Security
                     });
             }
 
-            //if (cfg.LinkedIn != null && cfg.LinkedIn.Enabled)
-            //{
-            //    authBuilder
-            //        .AddLinkedIn("LinkedIn", options =>
-            //        {
-            //            options.ClientId = cfg.LinkedIn.AppKey;
-            //            options.ClientSecret = cfg.LinkedIn.AppSecret;
-            //        });
-            //}
+            if (cfg.LinkedIn != null && cfg.LinkedIn.Enabled)
+            {
+                authBuilder
+                    .AddLinkedIn("LinkedIn", options =>
+                    {
+                        options.ClientId = cfg.LinkedIn.AppKey;
+                        options.ClientSecret = cfg.LinkedIn.AppSecret;
+                    });
+            }
 
             if (cfg.AzureAD != null && cfg.AzureAD.Enabled)
             {
@@ -55,6 +55,16 @@ namespace Portal.Security
                         options.Authority = $"https://login.microsoftonline.com/{cfg.AzureAD.TenantId}";
                         options.ClientId = cfg.AzureAD.AppKey;
                         options.ClientSecret = cfg.AzureAD.AppSecret;
+                    });
+            }
+
+            if (cfg.GitHub != null && cfg.GitHub.Enabled)
+            {
+                authBuilder
+                    .AddGitHub(options =>
+                    {
+                        options.ClientId = cfg.GitHub.AppKey;
+                        options.ClientSecret = cfg.GitHub.AppSecret;
                     });
             }
         }

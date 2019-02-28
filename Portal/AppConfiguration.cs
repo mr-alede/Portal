@@ -7,6 +7,7 @@
             public string SecretKey { get; set; }
 
             public ExternalAuthProvider Twitter { get; set; }
+            public ExternalAuthProvider GitHub { get; set; }
 
             /// <summary>
             /// Gets or sets Facebook auth properties
