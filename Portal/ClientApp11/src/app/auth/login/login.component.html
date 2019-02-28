@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-6 new-user-alert">
+    <div *ngIf="brandNew" class="alert alert-success" role="alert">
+      <strong>All set!</strong> Please login with your account
+    </div>
+    <h2>Login</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <form #f="ngForm" novalidate (ngSubmit)="login(f)">
+      <div class="form-group">
+        <label for="userName">Email</label>
+        <input type="text" required name="userName" class="form-control" placeholder="Email"
+          [ngModel]="credentials.userName" #userName="ngModel" tmFocus validateEmail>
+        <small [hidden]="userName.valid || (userName.pristine && !submitted)" class="text-danger">Please enter a valid
+          email</small>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" required name="password" placeholder="Password"
+          ngModel>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="f.invalid || isRequesting">Login</button>
+        <app-spinner [isRunning]="isRequesting"></app-spinner>
+      </div>
+
+      <div *ngIf="errors" class="alert alert-danger" role="alert">
+        <strong>Oops!</strong> {{errors}}
+      </div>
+    </form>
+
+    <div class="social">
+      <button class="btn btn-sm btn-default google" type="submit" (click)="callExternalLogin('Google')">
+        <i class="fa fa-google" aria-hidden="true"></i> Google
+      </button>
+      <button class="btn btn-sm btn-default facebook" type="submit" (click)="callExternalLogin('Facebook')">
+        <i class="fa fa-facebook" aria-hidden="true"></i> Facebook
+      </button>
+      <button class="btn btn-sm btn-default twitter" type="submit" (click)="callExternalLogin('Twitter')">
+        <i class="fa fa-twitter" aria-hidden="true"></i> Twitter
+      </button>
+      <button class="btn btn-sm btn-default git">
+        <i class="fab fa-github pr-1"></i> Github
+      </button>
+    </div>
+  </div>
+</div>

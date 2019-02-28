@@ -32,15 +32,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\app\auth\auth-routing.module.ts" />
-    <None Remove="ClientApp\src\app\services\interceptors\api.interceptor.ts" />
-    <None Remove="ClientApp\src\app\services\interceptors\auth.interceptor.ts" />
+    <None Remove="ClientApp11\src\app\auth\auth-routing.module.ts" />
+    <None Remove="ClientApp11\src\app\services\interceptors\api.interceptor.ts" />
+    <None Remove="ClientApp11\src\app\services\interceptors\auth.interceptor.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\auth\auth-routing.module.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\services\interceptors\api.interceptor.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\services\interceptors\auth.interceptor.ts" />
+    <None Include="ClientApp11\angular.json" />
+    <None Include="ClientApp11\e2e\tsconfig.e2e.json" />
+    <None Include="ClientApp11\package-lock.json" />
+    <None Include="ClientApp11\package.json" />
+    <None Include="ClientApp11\src\tsconfig.app.json" />
+    <None Include="ClientApp11\src\tsconfig.spec.json" />
+    <None Include="ClientApp11\src\tslint.json" />
+    <None Include="ClientApp11\tsconfig.json" />
+    <None Include="ClientApp11\tslint.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp11\src\app\auth\auth-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp11\src\app\services\interceptors\api.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp11\src\app\services\interceptors\auth.interceptor.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
