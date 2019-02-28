@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,12 +8,12 @@ using Portal.Helpers;
 using Portal.Model.Identity;
 using Portal.Security;
 using Portal.ViewModels.ExternalAuth;
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Portal.Controllers
 {
+    [Route("externalAuth")]
     public class ExternalAuthController : Controller
     {
         private readonly PortalDbContext appDbContext;
@@ -37,18 +35,16 @@ namespace Portal.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost]
-        [AllowAnonymous]
+        [Route("login/{provider}")]
         public IActionResult Login(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Action(nameof(LoginCallback), "Account", new { returnUrl });
+            var redirectUrl = Url.Action(nameof(LoginCallback), "ExternalAuth", new { returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [Route("loginCallback")]
         public async Task<IActionResult> LoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (remoteError != null)
@@ -94,16 +90,6 @@ namespace Portal.Controllers
             // Persist everything into the Db
             await appDbContext.SaveChangesAsync();
             return await TokenResult(user);
-
-
-            //else
-            //{
-            //    // If the user does not have an account, then ask the user to create an account.
-            //    ViewData["ReturnUrl"] = returnUrl;
-            //    ViewData["LoginProvider"] = info.LoginProvider;
-            //    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel
-            //    { Email = info.Principal.FindFirstValue(ClaimTypes.Email) });
-            //}
         }
 
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)

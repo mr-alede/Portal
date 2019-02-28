@@ -137,9 +137,7 @@ namespace Portal
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
