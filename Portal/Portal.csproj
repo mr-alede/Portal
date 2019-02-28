@@ -32,27 +32,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp11\src\app\auth\auth-routing.module.ts" />
-    <None Remove="ClientApp11\src\app\services\interceptors\api.interceptor.ts" />
-    <None Remove="ClientApp11\src\app\services\interceptors\auth.interceptor.ts" />
+    <None Remove="ClientApp\src\app\auth\auth-routing.module.ts" />
+    <None Remove="ClientApp\src\app\services\interceptors\api.interceptor.ts" />
+    <None Remove="ClientApp\src\app\services\interceptors\auth.interceptor.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="ClientApp11\angular.json" />
-    <None Include="ClientApp11\e2e\tsconfig.e2e.json" />
-    <None Include="ClientApp11\package-lock.json" />
-    <None Include="ClientApp11\package.json" />
-    <None Include="ClientApp11\src\tsconfig.app.json" />
-    <None Include="ClientApp11\src\tsconfig.spec.json" />
-    <None Include="ClientApp11\src\tslint.json" />
-    <None Include="ClientApp11\tsconfig.json" />
-    <None Include="ClientApp11\tslint.json" />
+    <Content Include="ClientApp\angular.json" />
+    <Content Include="ClientApp\e2e\tsconfig.e2e.json" />
+    <Content Include="ClientApp\package-lock.json" />
+    <Content Include="ClientApp\package.json" />
+    <Content Include="ClientApp\src\tsconfig.app.json" />
+    <Content Include="ClientApp\src\tsconfig.spec.json" />
+    <Content Include="ClientApp\src\tslint.json" />
+    <Content Include="ClientApp\tsconfig.json" />
+    <Content Include="ClientApp\tslint.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp11\src\app\auth\auth-routing.module.ts" />
-    <TypeScriptCompile Include="ClientApp11\src\app\services\interceptors\api.interceptor.ts" />
-    <TypeScriptCompile Include="ClientApp11\src\app\services\interceptors\auth.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\auth\auth-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\interceptors\api.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\interceptors\auth.interceptor.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
