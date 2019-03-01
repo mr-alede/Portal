@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   externalProviderWindow = null;
 
+  busy = false;
   brandNew: boolean;
   errors: string;
   submitted: boolean = false;
@@ -40,7 +41,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.errors = '';
     if (valid) {
+      this.busy = true;
       this.authService.login(value)
+      .pipe(finalize(() => this.busy = false))
         .subscribe(
           result => {
             if (result) {

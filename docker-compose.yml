@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  portal:
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${ASPNETCORE_KESTREL_CERTIFICATE_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: ${ASPNETCORE_KESTREL_CERTIFICATE_PATH}
+      ConnectionStrings__DefaultConnection: "Server=db.internal.prod.example.com,1433;Database=Portal;User=sa;Password=_passPass1;MultipleActiveResultSets=true"
+    build:
+      context: ./Portal
+    image: portal
+    ports:
+      - "59246:80"
+      - "44317:443"
+    volumes:
+      - ${CERTIFICATE_PATH}:/root/.dotnet/https
+    depends_on:
+      - db
+    networks:
+      mynetwork:
+        aliases:
+          - web1.internal.prod.example.com
+
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: "portal-sqlserver"
+    environment:
+      SA_PASSWORD: "_passPass1"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1933:1433"
+    volumes:
+      - ${SQL_SERVER_VOLUME_PATH}:/var/opt/mssql
+    networks:
+      mynetwork:
+        aliases:
+          - db.internal.prod.example.com
+
+networks:
+  mynetwork:
+    driver: bridge

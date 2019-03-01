@@ -24,7 +24,7 @@
       </div>
 
       <div class="form-group">
-        <button type="submit" class="btn btn-sm btn-primary" [disabled]="f.invalid || isRequesting">Login</button>
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="f.invalid || busy">Login</button>
       </div>
     </form>
   </div>
@@ -40,7 +40,7 @@
         <i class="fa fa-twitter" aria-hidden="true"></i> Twitter
       </button>
       <button class="btn btn-sm btn-default git" (click)="callExternalLogin('GitHub')">
-        <i class="fa fa-github pr-1"></i> Github
+        <i class="fa fa-github pr-1"></i> GitHub
       </button>
       <button class="btn btn-sm btn-default microsoft" (click)="callExternalLogin('Microsoft')">
         <i class="fa fa-windows pr-1"></i> Microsoft

@@ -23,4 +23,8 @@ export class HeaderComponent implements OnInit {
     this.appState.logout();
     this.router.navigate(['/login']);
   }
+
+  toggle() {
+
+  }
 }

@@ -9,6 +9,7 @@ namespace Portal.DataAccess
         public PortalDbContext(DbContextOptions<PortalDbContext> options)
         : base(options)
         {
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
