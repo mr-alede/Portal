@@ -61,6 +61,10 @@ namespace Portal.Controllers
             }
 
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                email = info.Principal.FindFirstValue(ClaimTypes.Name);
+            }
             // Lookup if there's an username with this e-mail address in the Db
             user = await userManager.FindByEmailAsync(email);
             if (user != null)
