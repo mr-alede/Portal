@@ -1,41 +1,35 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base-env
-RUN apt-get update && \
-    apt-get install -y wget && \
-    apt-get install -y gnupg2 && \
-    wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get install -y build-essential nodejs
-
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base-env
 WORKDIR /app
+
+# Build frontend stage
+# Linux
+FROM node:10 AS build-node
+# Windows
+#FROM stefanscherer/node-windows:10.15 AS build-node
+WORKDIR /ClientApp
+COPY ClientApp/package.json .
+COPY ClientApp/package-lock.json .
+RUN npm install
+RUN npm rebuild node-sass
+COPY ClientApp/ . 
+RUN npm run build --prod
 
 # Build stage
-FROM microsoft/dotnet:2.1-sdk AS build-env
-# Setup NodeJs
-RUN apt-get update && \
-    apt-get install -y wget && \
-    apt-get install -y gnupg2 && \
-    wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get install -y build-essential nodejs
-RUN npm install @angular/cli -g
-# End setup
+FROM microsoft/dotnet:2.2-sdk AS build-env
+ENV BuildingDocker=true
 WORKDIR /app
-
-# restore
 COPY *.csproj .
-RUN dotnet restore *.csproj
+RUN dotnet restore Portal.csproj
 
 # copy src
 COPY . .
 
-WORKDIR ClientApp
-RUN npm install
-RUN npm rebuild node-sass
-WORKDIR /app
-
 # publish
-RUN dotnet publish Portal.csproj -o /app
+RUN dotnet publish Portal.csproj -o /app -c Release
 
 # Runtime stage
 FROM base-env as portal
 WORKDIR /app
 COPY --from=build-env /app .
+COPY --from=build-node /ClientApp/dist ./ClientApp/dist
 ENTRYPOINT ["dotnet", "Portal.dll"]

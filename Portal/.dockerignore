@@ -6,6 +6,7 @@ infra/
 **/global.json
 **/Dockerfile*
 **/.dockerignore*
+**/.env
 **/docker-compose*.yml
 **/*.user
 **/node_modules/
