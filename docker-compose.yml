@@ -3,7 +3,7 @@ version: '3.4'
 services:
   portal:
     container_name: "portal-web"
-    image: portal
+    image: etacom-portal
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
       ASPNETCORE_URLS: ${ASPNETCORE_URLS}
@@ -32,7 +32,7 @@ services:
       SA_PASSWORD: "_passPass1"
       ACCEPT_EULA: "Y"
     ports:
-      - "1933:1433"
+      - "11433:1433"
     volumes:
       - ${SQL_SERVER_VOLUME_PATH}:${SQL_SERVER_CONTAINER_VOLUME_PATH}
     networks:
